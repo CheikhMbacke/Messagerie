@@ -1,14 +1,11 @@
 
 const xml2js = require("xml2js");
 const fs = require('fs');
-const { resolve } = require("path");
+const { resolve, parse } = require("path");
 const parser = xml2js.Parser({ attrkey: "ATTR" });
-let data  = fs.readFileSync("messagerie.xml", "utf-8");
 
 
-function getUserById(idContact){
-    let found = false;
-    let ctact;
+function getUserById(idContact, data){
     return new Promise((resolve, reject) =>{
         parser.parseString(data, (err, result) =>{
             if(result === null) console.log(err);
@@ -26,7 +23,7 @@ function getUserById(idContact){
     
 }
 
-function getGroupeById(idGroupe){
+function getGroupeById(idGroupe, data){
     parser.parseString(data, (err, result) =>{
         if(result === null) console.log(err);
         else{
@@ -41,7 +38,7 @@ function getGroupeById(idGroupe){
     });
 }
 
-function getGroupesOfUser(idContact){
+function getGroupesOfUser(idContact, data){
     let grps = [];
     parser.parseString(data, (err, result) =>{
         if(result === null) console.log(err);
@@ -62,7 +59,7 @@ function getGroupesOfUser(idContact){
     else return null;
 }
 
- function receivedMessages(id){
+ function receivedMessages(id, data){
     let receivedMsg = {
         from: String,
         telephone: String,
@@ -97,3 +94,80 @@ function getGroupesOfUser(idContact){
    })
    
 }
+
+function getNumberOfContact(){
+   return new Promise((resolve, reject) =>{
+        parser.parseString(data, (err, result) =>{
+            resolve(result['messagerie']['contacts'][0]['contact'].length)
+        });
+   })
+}
+
+function getNumberOfMessage(){
+    return new Promise((resolve, reject) =>{
+         parser.parseString(data, (err, result) =>{
+             resolve(result['messagerie']['messages'][0]['message'].length)
+         });
+    })
+ }
+
+function insertUser(name, lastname, phone, data) {
+    let nbContact;
+    getNumberOfContact().then((nb) =>{
+        nbContact = nb + 1;
+        parser.parseString(data, (err, result) =>{
+            result.messagerie.contacts[0].contact.push({
+                $: {
+                    idContact: 'con-'+nbContact,
+                    groupesRef: "",
+                    contactsRef: ""
+                },
+                nom: lastname,
+                prenom: name,
+                numero: phone
+            });
+           result = JSON.stringify(result).replace(/ATTR/g,'$');
+           
+            let builder = new xml2js.Builder()
+            xml = builder.buildObject(JSON.parse(result))    
+            fs.writeFile("messagerie.xml", xml, (err) =>{
+                if(err) console.log(err);
+                else console.log("Bien enregistré")
+            });
+        })
+    });
+}
+
+function insertMessage(message, data) {
+    console.log(message);
+    getNumberOfMessage().then((nb) =>{
+        nbMsg = nb + 1
+        parser.parseString(data, (err, result) =>{
+            result.messagerie.messages[0].message.push({
+                $: {
+                    idContact: 'msg-'+nbMsg,
+                    expediteur: "",
+                    destination: "",
+                    datetime: ''
+                },
+                _: message
+            });
+           result = JSON.stringify(result).replace(/ATTR/g,'$');
+           
+            let builder = new xml2js.Builder()
+            xml = builder.buildObject(JSON.parse(result))    
+            fs.writeFile("messagerie.xml", xml, (err) =>{
+                if(err) console.log(err);
+                else console.log("Bien enregistré")
+            });
+        })
+    })
+}
+
+function insertUserToGroupe() {}
+
+function insertContactForUser() {}
+
+
+
+function update() {}
