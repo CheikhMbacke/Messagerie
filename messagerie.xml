@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE messagerie SYSTEM "messagerie.dtd">
+<messagerie>
+    <contacts>
+        <contact idContact="con-1" groupesRef="grp-1 grp-2" contactsRef="">
+            <nom>THIAW</nom>
+            <prenom>Serigne Cheikh Mbacke</prenom>
+            <numero>771234567</numero>
+        </contact>
+         <contact idContact="con-2" groupesRef="" contactsRef="">
+            <nom>SOW</nom>
+            <prenom>Ndoumbe</prenom>
+            <numero>778945612</numero>
+        </contact>
+    </contacts>
+    <groupes>
+        <groupe idGroupe="grp-1">
+            <nom>Groupe 1</nom>
+            <participant idref="con-1"></participant>
+            <participant idref="con-2"></participant>
+        </groupe>
+         <groupe idGroupe="grp-2">
+            <nom>Groupe 1</nom>
+            <participant idref="con-1"></participant>
+            <participant idref="con-2"></participant>
+        </groupe>
+    </groupes>
+    <messages>
+        <message idMessage="mes-1" expediteur="con-1" destination="con-2" datetime="17/01/2020:03:50">
+            premier message dans de con-1 a con-2
+        </message>
+    </messages>
+</messagerie>
