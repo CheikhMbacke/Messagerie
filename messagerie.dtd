@@ -1,0 +1,16 @@
+ <!ELEMENT messagerie (contacts, groupes?, messages)>
+    <!ELEMENT groupes (groupe+)>
+    <!ELEMENT groupe (nom,participant,message*)>
+    <!ATTLIST participant IDREF>
+    <!ATTLIST groupe idGroupe ID #REQUIRED>
+    <!ELEMENT contacts (contact+)>
+    <!ELEMENT contact (nom, prenom, numero, role?)>
+    <!ELEMENT messages (message*)>
+    <!ATTLIST contact  idContact ID #REQUIRED
+                    groupesRef IDREFS #IMPLIED
+                    contactsRef IDREFS #IMPLIED>
+    <!ELEMENT message (#PCDATA | vocal | fichier | contact)+>
+    <!ATTLIST message idMessage ID #REQUIRED
+                    expediteur IDREF #REQUIRED>
+                    destination IDREF #REQUIRED
+                    datetime #PCDATA>
