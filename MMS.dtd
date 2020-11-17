@@ -1,0 +1,5 @@
+<!ELEMEMT contacts(contact+) >
+<!ELEMEMT contact(messages,groupes*) >
+<!ELEMEMT messages(message+)>
+<!ELEMEMT groupes(groupe+)>
+<!ELEMEMT message()>
